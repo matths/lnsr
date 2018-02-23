@@ -4,7 +4,8 @@
   "description": "lean server - small node.js bits & modules to create a lean and simple sever from scratch",
   "main": "index.js",
   "scripts": {
-    "example": "node example/index.js"
+    "example": "node example/index.js",
+    "test": "tap test"
   },
   "keywords": [
     "lean",
@@ -24,6 +25,10 @@
     "lodash": "^4.17.5"
   },
   "devDependencies": {
+    "node-mocks-http": "^1.6.7",
+    "rewire": "^3.0.2",
+    "sinon": "^4.4.0",
+    "tap": "^11.1.1"
   },
   "engines": {
     "node": ">=5.5.0"
