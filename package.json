@@ -1,0 +1,31 @@
+{
+  "name": "lnsr",
+  "version": "0.1.0",
+  "description": "lean server - small node.js bits & modules to create a lean and simple sever from scratch",
+  "main": "index.js",
+  "scripts": {
+    "example": "node example/index.js"
+  },
+  "keywords": [
+    "lean",
+    "server",
+    "queue",
+    "connect",
+    "express",
+    "simple"
+  ],
+  "author": "Matthias Dittgen <dittgen@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:matths/lnsr.git"
+  },
+  "dependencies": {
+    "lodash": "^4.17.5"
+  },
+  "devDependencies": {
+  },
+  "engines": {
+    "node": ">=5.5.0"
+  }
+}
