@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "example": "node example/index.js",
-    "test": "tap test"
+    "test": "tap -Rspec --coverage test"
   },
   "keywords": [
     "lean",
@@ -13,6 +13,7 @@
     "queue",
     "connect",
     "express",
+    "middleware",
     "simple"
   ],
   "author": "Matthias Dittgen <dittgen@gmail.com>",
@@ -22,15 +23,12 @@
     "url": "git@github.com:matths/lnsr.git"
   },
   "dependencies": {
-    "lodash": "^4.17.5"
+    "lodash": "^4.17.11"
   },
   "devDependencies": {
-    "node-mocks-http": "^1.6.7",
-    "rewire": "^3.0.2",
-    "sinon": "^4.4.0",
-    "tap": "^11.1.1"
-  },
-  "engines": {
-    "node": ">=5.5.0"
+    "node-mocks-http": "^1.7.3",
+    "rewire": "^4.0.1",
+    "sinon": "^7.2.5",
+    "tap": "^12.5.3"
   }
 }
