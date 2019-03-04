@@ -1,9 +1,8 @@
 var tap = require('tap');
 var sinon = require('sinon');
-var rewire = require('rewire');
 var httpMocks = require('node-mocks-http');
 
-var filterHost = rewire('../../../../lib/filter/host');
+var filterHost = require('../../../../lib/filter/host');
 
 tap.test('host middleware module', function (tap) {
   var req, res;
