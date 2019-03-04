@@ -4,7 +4,7 @@ var httpMocks = require('node-mocks-http');
 
 var filterProtocol = require('../../../../lib/filter/protocol');
 
-tap.test('host middleware module', function (tap) {
+tap.test('protocol middleware module', function (tap) {
   var req, res;
   
   tap.beforeEach(function (done) {
