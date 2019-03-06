@@ -5,6 +5,13 @@ var httpMocks = require('node-mocks-http');
 
 var queue = rewire('../../../lib/queue');
 
+function spyOnPrivateMethod (methodStr, obj) {
+    var method = obj.__get__(methodStr);
+    var methodSpy = sinon.spy(method);
+    obj.__set__(methodStr, methodSpy);
+    return methodSpy;
+}
+
 tap.test('queue middleware module', function (tap) {
   var req, res;
   
@@ -33,13 +40,8 @@ tap.test('queue middleware module', function (tap) {
 
   tap.test('when returned middleware function is used', function (tap) {
     tap.plan(2);
-    var execute = queue.__get__('execute');
-    var executeSpy = sinon.spy(execute);
-    queue.__set__('execute', executeSpy);
-
-    var empty = queue.__get__('empty');
-    var emptySpy = sinon.spy(empty);
-    queue.__set__('empty', emptySpy);
+    var executeSpy = spyOnPrivateMethod('execute', queue);
+    var emptySpy = spyOnPrivateMethod('empty', queue);
 
     var queueMiddleware = queue();
     queueMiddleware(req, res);
