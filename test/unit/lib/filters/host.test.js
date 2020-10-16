@@ -1,5 +1,4 @@
 var tap = require('tap');
-var sinon = require('sinon');
 var httpMocks = require('node-mocks-http');
 var hostnameFilter = require('../../../../lib/filters/host');
 
