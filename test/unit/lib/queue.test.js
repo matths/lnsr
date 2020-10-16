@@ -107,6 +107,22 @@ tap.test('queue middleware module', function (tap) {
     tap.end();
   });
 
+  tap.test('when used with a middleware throwing an error/exception', function (tap) {
+    tap.plan(2);
+    var badMiddlewareSpy = sinon.spy(function (req, res, next) {
+      throw new Error("something went wrong.");
+      next();
+    });
+    var error = queue.__get__('error');
+    var errorSpy = sinon.spy(error);
+    queue.__set__('error', errorSpy);
+    var queueMiddleware = queue(badMiddlewareSpy);
+    queueMiddleware(req, res);
+    tap.ok(badMiddlewareSpy.calledOnce, 'should call error middleware once');
+    tap.ok(errorSpy.calledOnce, 'should call internal error once');
+    tap.end();
+  });
+
   tap.test('when used with an error middleware and a custom req.error function', function (tap) {
     tap.plan(4);
     req.error = sinon.spy(function (err, req, res, next) {});
