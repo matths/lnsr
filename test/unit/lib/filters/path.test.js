@@ -3,7 +3,7 @@ var sinon = require('sinon');
 var rewire = require('rewire');
 var httpMocks = require('node-mocks-http');
 
-var filterPath = rewire('../../../../lib/filter/path');
+var filterPath = rewire('../../../../lib/filters/path');
 
 function spyOnPrivateMethod (methodStr, obj) {
     var method = obj.__get__(methodStr);

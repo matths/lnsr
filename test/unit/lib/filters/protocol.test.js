@@ -2,7 +2,7 @@ var tap = require('tap');
 var sinon = require('sinon');
 var httpMocks = require('node-mocks-http');
 
-var filterProtocol = require('../../../../lib/filter/protocol');
+var filterProtocol = require('../../../../lib/filters/protocol');
 
 tap.test('protocol middleware module', function (tap) {
   var req, res;

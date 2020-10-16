@@ -2,7 +2,7 @@ var tap = require('tap');
 var sinon = require('sinon');
 var httpMocks = require('node-mocks-http');
 
-var filterMethod = require('../../../../lib/filter/method');
+var filterMethod = require('../../../../lib/filters/method');
 
 tap.test('method middleware module', function (tap) {
   var req, res;
