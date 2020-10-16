@@ -1,82 +1,31 @@
 var tap = require('tap');
-var sinon = require('sinon');
 var httpMocks = require('node-mocks-http');
+var methodFilter = require('../../../../lib/filters/method');
 
-var filterMethod = require('../../../../lib/filters/method');
-
-tap.test('method middleware module', function (tap) {
-  var req, res;
+tap.test('method filter module', function (tap) {
   
-  tap.beforeEach(function (done) {
-    req = httpMocks.createRequest({
+  tap.test('when created', function (tap) {
+    tap.plan(5);
+    tap.false(methodFilter(), 'should return false when created without method');
+    tap.false(methodFilter('UGLIFY'), 'should return false when created without invalid method');
+    tap.strictEqual(typeof methodFilter('GET'), 'function', 'should return a function when created with valid one valid method');
+    tap.strictEqual(typeof methodFilter(['GET', 'POST']), 'function', 'should return a function when created with an array of valid methods');
+    tap.strictEqual(typeof methodFilter(['GET', 'UGLIFY']), 'function','should return a function when created without a single valid method');
+    tap.end();
+  });
+
+  tap.test('when using with different method names as filter function', function (tap) {
+    tap.plan(3);
+
+    var req = httpMocks.createRequest({
       method: 'GET',
       url: '/',
     });
-    res = httpMocks.createResponse({
-      eventEmitter: require('events').EventEmitter
-    });
-    done();
-  });
-
-  tap.test('when created without method', function (tap) {
-    tap.plan(1);
-    var filterMethodMiddleware = filterMethod();
-    tap.false(filterMethodMiddleware, 'should return false');
+  
+    tap.true(methodFilter('GET')(req), 'should match single uppercase method');
+    tap.true(methodFilter('Get')(req), 'should match single mixed case method');
+    tap.true(methodFilter(['GET', 'POST'])(req), 'should match a method from list');
     tap.end();
-  });
-
-
-  tap.test('when created with invalid method', function (tap) {
-    tap.plan(1);
-    var filterMethodMiddleware = filterMethod(['BOOST', 'GET']);
-    tap.false(filterMethodMiddleware, 'should return false');
-    tap.end();
-  });
-
-  tap.test('when created with method and middleware function', function (tap) {
-    tap.plan(2);
-    var filterMethodMiddleware = filterMethod('get', sinon.fake());
-    tap.strictEqual(typeof filterMethodMiddleware, 'function', 'should return a middleware function');
-    tap.strictEqual(filterMethodMiddleware.length, 3, 'that excepts three arguments by default');
-    tap.end();
-  });
-
-  tap.test('when returned middleware function is used with at least one matching method', function (tap) {
-    tap.plan(4);
-    var nextSpy = sinon.fake();
-    var middlewareSpy = sinon.spy(function (req, res, next) {
-      next();
-    });
-
-    var filterMethodMiddleware = filterMethod(['GET', 'POST'], middlewareSpy);
-    filterMethodMiddleware(req, res, nextSpy);
-
-    tap.ok(middlewareSpy.calledOnce, 'should call middleware once');
-    tap.ok(middlewareSpy.calledWith(req, res), 'should call middleware with req and res');
-    tap.strictEqual(typeof middlewareSpy.lastCall.lastArg, 'function', 'should call middleware with a next function');
-    tap.ok(nextSpy.calledOnce, 'should call next once after the middleware');
-    tap.end();
-  });
-
-  tap.test('when returned middleware function is used with non matching host', function (tap) {
-    tap.plan(2);
-    var nextSpy = sinon.fake();
-    var middlewareSpy = sinon.spy(function (req, res, next) {
-      next();
-    });
-
-    var filterMethodMiddleware = filterMethod('DELETE', middlewareSpy);
-    filterMethodMiddleware(req, res, nextSpy);
-
-    tap.ok(middlewareSpy.notCalled, 'should not call middleware once');
-    tap.ok(nextSpy.calledOnce, 'should call next once after the middleware');
-    tap.end();
-  });
-
-  tap.afterEach(function (done) {
-    req = null;
-    res = null;
-    done();
   });
 
   tap.end();
