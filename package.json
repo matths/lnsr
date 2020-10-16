@@ -26,9 +26,9 @@
     "lodash": "^4.17.20"
   },
   "devDependencies": {
-    "node-mocks-http": "^1.7.3",
-    "rewire": "^4.0.1",
-    "sinon": "^7.2.5",
-    "tap": "^12.5.3"
+    "node-mocks-http": "^1.9.0",
+    "rewire": "^5.0.0",
+    "sinon": "^9.2.0",
+    "tap": "^14.10.8"
   }
 }
