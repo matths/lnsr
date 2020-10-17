@@ -22,9 +22,7 @@
     "type": "git",
     "url": "git@github.com:matths/lnsr.git"
   },
-  "dependencies": {
-    "lodash": "^4.17.20"
-  },
+  "dependencies": {},
   "devDependencies": {
     "node-mocks-http": "^1.9.0",
     "rewire": "^5.0.0",
