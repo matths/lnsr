@@ -1,30 +1,23 @@
 var tap = require('tap');
 var sinon = require('sinon');
 var httpMocks = require('node-mocks-http');
+var protocolFilter = require('../../../../lib/filters/protocol');
 
-var filterProtocol = require('../../../../lib/filters/protocol');
-
-tap.test('protocol middleware module', function (tap) {
-  var req, res;
+tap.test('protocol filter module', function (tap) {
   
-  tap.beforeEach(function (done) {
-    res = httpMocks.createResponse({
-      eventEmitter: require('events').EventEmitter
-    });
+  tap.test('when created', function (tap) {
+    tap.plan(2);
 
-    done();
-  });
+    tap.false(protocolFilter(), 'should return false when no protocol is specified');
+    tap.strictEqual(typeof protocolFilter('http'), 'function', 'should return a function');
 
-  tap.test('when created without protocol', function (tap) {
-    tap.plan(1);
-    var filterProtocolMiddleware = filterProtocol();
-    tap.false(filterProtocolMiddleware, 'should return false');
     tap.end();
   });
 
-  tap.test('when created with protocol and middleware function', function (tap) {
+  tap.test('when using with differnet protocols as a filter function for encrypted request', tap => {
     tap.plan(2);
-    req = httpMocks.createRequest({
+
+    const req = httpMocks.createRequest({
       method: 'GET',
       url: '/',
       connection: {
@@ -32,87 +25,24 @@ tap.test('protocol middleware module', function (tap) {
       }
     });
 
-    var filterProtocolMiddleware = filterProtocol('https', sinon.fake());
-    tap.strictEqual(typeof filterProtocolMiddleware, 'function', 'should return a middleware function');
-    tap.strictEqual(filterProtocolMiddleware.length, 3, 'that excepts three arguments by default');
+    tap.true(protocolFilter('https')(req), 'should match protocol');
+    tap.false(protocolFilter('http')(req), 'should not match protocol');
+
     tap.end();
   });
 
-  tap.test('when returned middleware function is used with matching protocol', function (tap) {
-    tap.plan(4);
-    req = httpMocks.createRequest({
-      method: 'GET',
-      url: '/',
-      connection: {
-        encrypted: true
-      }
-    });
-
-    var nextSpy = sinon.fake();
-    var middlewareSpy = sinon.spy(function (req, res, next) {
-      next();
-    });
-
-    var filterProtocolMiddleware = filterProtocol('https', middlewareSpy);
-    filterProtocolMiddleware(req, res, nextSpy);
-
-    tap.ok(middlewareSpy.calledOnce, 'should call middleware once');
-    tap.ok(middlewareSpy.calledWith(req, res), 'should call middleware with req and res');
-    tap.strictEqual(typeof middlewareSpy.lastCall.lastArg, 'function', 'should call middleware with a next function');
-    tap.ok(nextSpy.calledOnce, 'should call next once after the middleware');
-    tap.end();
-  });
-
-  tap.test('when returned middleware function is used with non matching protocol', function (tap) {
+  tap.test('when using with differnet protocols as a filter function for plain request', tap => {
     tap.plan(2);
-    req = httpMocks.createRequest({
+
+    const req = httpMocks.createRequest({
       method: 'GET',
       url: '/'
     });
 
-    var nextSpy = sinon.fake();
-    var middlewareSpy = sinon.spy(function (req, res, next) {
-      next();
-    });
+    tap.false(protocolFilter('https')(req), 'should not match protocol');
+    tap.true(protocolFilter('http')(req), 'should match protocol');
 
-    var filterProtocolMiddleware = filterProtocol('https', middlewareSpy);
-    filterProtocolMiddleware(req, res, nextSpy);
-
-    tap.ok(middlewareSpy.notCalled, 'should not call middleware once');
-    tap.ok(nextSpy.calledOnce, 'should call next once after the middleware');
     tap.end();
-  });
-
-  tap.test('when returned middleware function is used behind a proxy', function (tap) {
-    tap.plan(4);
-
-    req = httpMocks.createRequest({
-      method: 'GET',
-      url: '/',
-      headers: {
-        'x-forwarded-proto': 'https,http'
-      },
-    });
-
-    var nextSpy = sinon.fake();
-    var middlewareSpy = sinon.spy(function (req, res, next) {
-      next();
-    });
-
-    var filterProtocolMiddleware = filterProtocol('https', middlewareSpy);
-    filterProtocolMiddleware(req, res, nextSpy);
-
-    tap.ok(middlewareSpy.calledOnce, 'should call middleware once');
-    tap.ok(middlewareSpy.calledWith(req, res), 'should call middleware with req and res');
-    tap.strictEqual(typeof middlewareSpy.lastCall.lastArg, 'function', 'should call middleware with a next function');
-    tap.ok(nextSpy.calledOnce, 'should call next once after the middleware');
-    tap.end();
-  });
-
-  tap.afterEach(function (done) {
-    req = null;
-    res = null;
-    done();
   });
 
   tap.end();
