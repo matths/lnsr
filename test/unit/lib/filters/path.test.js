@@ -26,6 +26,15 @@ tap.test('method middleware module', function (tap) {
     done();
   });
 
+  tap.test('when using the internal split function', function (tap) {
+    tap.plan(3);
+    var split = filterPath.__get__('split');
+    tap.same(split('/aaa/bbb'), ['/aaa', '/bbb'], 'should split string in portions starting with slash');
+    tap.false(split('somethingwrong'), 'should return false when string is no path');
+    tap.false(split(), 'should return false when there is no string');
+    tap.end();
+  });
+
   tap.test('when created without path pattern', function (tap) {
     tap.plan(2);
     var splitSpy = spyOnPrivateMethod('split', filterPath);
