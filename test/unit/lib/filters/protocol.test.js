@@ -1,11 +1,11 @@
-var tap = require('tap');
-var sinon = require('sinon');
-var httpMocks = require('node-mocks-http');
-var protocolFilter = require('../../../../lib/filters/protocol');
+const tap = require('tap');
+const sinon = require('sinon');
+const httpMocks = require('node-mocks-http');
+const protocolFilter = require('../../../../lib/filters/protocol');
 
-tap.test('protocol filter module', function (tap) {
+tap.test('protocol filter module', tap => {
   
-  tap.test('when created', function (tap) {
+  tap.test('when created', tap => {
     tap.plan(2);
 
     tap.false(protocolFilter(), 'should return false when no protocol is specified');

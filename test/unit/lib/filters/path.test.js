@@ -1,23 +1,22 @@
-var tap = require('tap');
-var sinon = require('sinon');
-var rewire = require('rewire');
-var httpMocks = require('node-mocks-http');
-const pathFilter = require('../../../../lib/filters/path');
+const tap = require('tap');
+const sinon = require('sinon');
+const rewire = require('rewire');
+const httpMocks = require('node-mocks-http');
 
-var filterPath = rewire('../../../../lib/filters/path');
+const pathFilter = rewire('../../../../lib/filters/path');
 
-function spyOnPrivateMethod (methodStr, obj) {
-    var method = obj.__get__(methodStr);
-    var methodSpy = sinon.spy(method);
-    obj.__set__(methodStr, methodSpy);
-    return methodSpy;
+const spyOnPrivateMethod = (methodStr, obj) => {
+  const method = obj.__get__(methodStr);
+  const methodSpy = sinon.spy(method);
+  obj.__set__(methodStr, methodSpy);
+  return methodSpy;
 }
 
-tap.test('path filter module', function (tap) {
+tap.test('path filter module', tap => {
   
-  tap.test('when using internal splitAtSlashes', function (tap) {
+  tap.test('when using internal splitAtSlashes', tap => {
     tap.plan(4);
-    var split = filterPath.__get__('splitAtSlashes');
+    const split = pathFilter.__get__('splitAtSlashes');
     tap.same(split('/aaa/bbb'), ['/aaa', '/bbb'], 'should split string in portions starting with a slash');
     tap.same(split('/aaa/bbb/'), ['/aaa', '/bbb'], 'should ignore trailing slash');
     tap.false(split('somethingwrong'), 'should return false when string is no path');
@@ -25,33 +24,33 @@ tap.test('path filter module', function (tap) {
     tap.end();
   });
 
-  tap.test('when using internal isPlaceholderSegment', function (tap) {
+  tap.test('when using internal isPlaceholderSegment', tap => {
     tap.plan(2);
-    var isPlaceholderSegment = filterPath.__get__('isPlaceholderSegment');
+    const isPlaceholderSegment = pathFilter.__get__('isPlaceholderSegment');
     tap.true(isPlaceholderSegment('/:userid'), 'should detect placeholders');
     tap.false(isPlaceholderSegment('somethingwrong'), 'should return false if no placeholder');
     tap.end();
   });
 
-  tap.test('when using internal removeLeadingSlash', function (tap) {
+  tap.test('when using internal removeLeadingSlash', tap => {
     tap.plan(2);
-    var removeLeadingSlash = filterPath.__get__('removeLeadingSlash');
+    const removeLeadingSlash = pathFilter.__get__('removeLeadingSlash');
     tap.strictEqual(removeLeadingSlash('/user'), 'user', 'should remove leading slash');
     tap.strictEqual(removeLeadingSlash('somethingwrong'), 'somethingwrong', 'should return original string otherweise');
     tap.end();
   });
 
-  tap.test('when using internal removeLeadingSlashAndColon', function (tap) {
+  tap.test('when using internal removeLeadingSlashAndColon', tap => {
     tap.plan(2);
-    var removeLeadingSlashAndColon = filterPath.__get__('removeLeadingSlashAndColon');
+    const removeLeadingSlashAndColon = pathFilter.__get__('removeLeadingSlashAndColon');
     tap.strictEqual(removeLeadingSlashAndColon('/:user'), 'user', 'should remove leading slash and colon');
     tap.strictEqual(removeLeadingSlashAndColon('somethingwrong'), 'somethingwrong', 'should return original string otherweise');
     tap.end();
   });
 
-  tap.test('when using internal matchesTheQuery', function (tap) {
+  tap.test('when using internal matchesTheQuery', tap => {
     tap.plan(3);
-    var matchesTheQuery = filterPath.__get__('matchesTheQuery');
+    const matchesTheQuery = pathFilter.__get__('matchesTheQuery');
     tap.true(
       matchesTheQuery(
         ['/user', '/:useid', '/action', '/:action'],
@@ -76,9 +75,9 @@ tap.test('path filter module', function (tap) {
     tap.end();
   });
 
-  tap.test('when using internal identifyParams', function (tap) {
+  tap.test('when using internal identifyParams', tap => {
     tap.plan(1);
-    var identifyParams = filterPath.__get__('identifyParams');
+    const identifyParams = pathFilter.__get__('identifyParams');
     tap.same(
       identifyParams(
         ['/user', '/:userid', '/action', '/:action'],
