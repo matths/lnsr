@@ -31,6 +31,21 @@ tap.test('request filter middleware module', function (tap) {
     tap.end();
   });
 
+  tap.test('when running with without a filter function', function (tap) {
+    tap.plan(2);
+
+    var nextSpy = sinon.fake();
+    var middlewareSpy = sinon.spy( (req, res, next) => {
+      next();
+    });
+
+    requestFilterMiddleware(false, middlewareSpy)(req, res, nextSpy);
+    tap.strictEqual(middlewareSpy.callCount, 0, 'should not call middleware');
+    tap.ok(nextSpy.calledOnce, 'should call next function');
+    tap.end();
+  });
+
+
   tap.test('when running with with a matching filter', function (tap) {
     tap.plan(4);
 
