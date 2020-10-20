@@ -1,13 +1,13 @@
-var tap = require('tap');
-var sinon = require('sinon');
-var httpMocks = require('node-mocks-http');
+const tap = require('tap');
+const sinon = require('sinon');
+const httpMocks = require('node-mocks-http');
 
-var requestFilterMiddleware = require('../../../lib/filter');
+const requestFilterMiddleware = require('../../../lib/filter');
 
-tap.test('request filter middleware module', function (tap) {
-  var req, res, returnTrue, returnFalse;
+tap.test('request filter middleware module', tap => {
+  let req, res, returnTrue, returnFalse;
   
-  tap.beforeEach(function (done) {
+  tap.beforeEach(done => {
     req = httpMocks.createRequest({
       method: 'GET',
       url: '/user/Bob',
@@ -20,7 +20,7 @@ tap.test('request filter middleware module', function (tap) {
     done();
   });
 
-  tap.test('when created', function (tap) {
+  tap.test('when created', tap => {
     tap.plan(1);
 
     middleware = (req, res, next) => {
@@ -31,11 +31,11 @@ tap.test('request filter middleware module', function (tap) {
     tap.end();
   });
 
-  tap.test('when running with without a filter function', function (tap) {
+  tap.test('when running with without a filter function', tap => {
     tap.plan(2);
 
-    var nextSpy = sinon.fake();
-    var middlewareSpy = sinon.spy( (req, res, next) => {
+    const nextSpy = sinon.fake();
+    const middlewareSpy = sinon.spy((req, res, next) => {
       next();
     });
 
@@ -46,11 +46,11 @@ tap.test('request filter middleware module', function (tap) {
   });
 
 
-  tap.test('when running with with a matching filter', function (tap) {
+  tap.test('when running with with a matching filter', tap => {
     tap.plan(4);
 
-    var nextSpy = sinon.fake();
-    var middlewareSpy = sinon.spy( (req, res, next) => {
+    const nextSpy = sinon.fake();
+    const middlewareSpy = sinon.spy((req, res, next) => {
       next();
     });
 
@@ -62,11 +62,11 @@ tap.test('request filter middleware module', function (tap) {
     tap.end();
   });
 
-  tap.test('when running with with a non matching filter', function (tap) {
+  tap.test('when running with with a non matching filter', tap => {
     tap.plan(2);
 
-    var nextSpy = sinon.fake();
-    var middlewareSpy = sinon.spy((req, res, next) => {
+    const nextSpy = sinon.fake();
+    const middlewareSpy = sinon.spy((req, res, next) => {
       next();
     });
 
@@ -76,7 +76,7 @@ tap.test('request filter middleware module', function (tap) {
     tap.end();
   });
 
-  tap.afterEach(function (done) {
+  tap.afterEach(done => {
     req = null;
     res = null;
     done();

@@ -1,13 +1,13 @@
-var tap = require('tap');
-var sinon = require('sinon');
-var httpMocks = require('node-mocks-http');
+const tap = require('tap');
+const sinon = require('sinon');
+const httpMocks = require('node-mocks-http');
 
-var error = require('../../../lib/error');
+const error = require('../../../lib/error');
 
-tap.test('error middleware module', function (tap) {
-  var req, res;
+tap.test('error middleware module', tap => {
+  let req, res;
   
-  tap.beforeEach(function (done) {
+  tap.beforeEach(done => {
     req = httpMocks.createRequest({
       method: 'GET',
       url: '/',
@@ -21,21 +21,21 @@ tap.test('error middleware module', function (tap) {
     done();
   });
 
-  tap.test('when created', function (tap) {
+  tap.test('when created', tap => {
     tap.plan(2);
-    var errorMiddleware = error();
+    const errorMiddleware = error();
 
     tap.strictEqual(typeof errorMiddleware, 'function', 'should return a middleware function');
     tap.strictEqual(errorMiddleware.length, 3, 'that excepts three arguments by default');
     tap.end();
   });
 
-  tap.test('when returned middleware function is used with a custom error handler', function (tap) {
+  tap.test('when returned middleware function is used with a custom error handler', tap => {
     tap.plan(2);
-    var customError = sinon.fake();
-    var nextSpy = sinon.spy(function (req, res, next) {});
+    const customError = sinon.fake();
+    const nextSpy = sinon.spy((req, res, next) => {});
 
-    var errorMiddleware = error(customError);
+    const errorMiddleware = error(customError);
     errorMiddleware(req, res, nextSpy);
 
     tap.ok(nextSpy.calledOnce, 'should call next');
@@ -43,11 +43,11 @@ tap.test('error middleware module', function (tap) {
     tap.end();
   });
 
-  tap.test('when returned middleware function is used without a custom error handler', function (tap) {
+  tap.test('when returned middleware function is used without a custom error handler', tap => {
     tap.plan(2);
-    var nextSpy = sinon.spy(function (req, res, next) {});
+    const nextSpy = sinon.spy((req, res, next) => {});
 
-    var errorMiddleware = error();
+    const errorMiddleware = error();
     errorMiddleware(req, res, nextSpy);
 
     tap.ok(nextSpy.calledOnce, 'should call next');
@@ -55,7 +55,7 @@ tap.test('error middleware module', function (tap) {
     tap.end();
   });
 
-  tap.afterEach(function (done) {
+  tap.afterEach(done => {
     req = null;
     res = null;
     done();
