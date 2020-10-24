@@ -1,5 +1,7 @@
 # lnsr
 
+![tests](https://github.com/matths/lnsr/workflows/tests/badge.svg)
+
 lnsr (lean server) is a small (and maybe growing) collection of small [node][node.js] modules to create a lean and simple sever from scratch.
 Every part of it is a [connect][connect github] and [express][express github] compatible _middleware_.
 
