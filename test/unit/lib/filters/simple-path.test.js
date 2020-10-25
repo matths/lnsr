@@ -1,8 +1,7 @@
 const tap = require('tap');
-const rewire = require('rewire');
 const httpMocks = require('node-mocks-http');
 
-const simplePathFilter = rewire('../../../../lib/filters/simple-path');
+const simplePathFilter = require('../../../../lib/filters/simple-path');
 
 tap.test('filter module', tap => {
   let req;

@@ -1,16 +1,8 @@
 const tap = require('tap');
 const sinon = require('sinon');
-const rewire = require('rewire');
 const httpMocks = require('node-mocks-http');
 
-const queue = rewire('../../../lib/queue');
-
-const spyOnPrivateMethod = (methodStr, obj) => {
-    const method = obj.__get__(methodStr);
-    const methodSpy = sinon.spy(method);
-    obj.__set__(methodStr, methodSpy);
-    return methodSpy;
-}
+const queue = require('../../../lib/queue');
 
 tap.test('queue middleware module', tap => {
   let req, res;
@@ -35,19 +27,6 @@ tap.test('queue middleware module', tap => {
 
     tap.strictEqual(typeof queueMiddleware, 'function', 'should return a middleware function');
     tap.strictEqual(queueMiddleware.length, 3, 'that excepts three arguments by default');
-    tap.end();
-  });
-
-  tap.test('when returned middleware function is used', tap => {
-    tap.plan(2);
-    const executeSpy = spyOnPrivateMethod('execute', queue);
-    const emptySpy = spyOnPrivateMethod('empty', queue);
-
-    const queueMiddleware = queue();
-    queueMiddleware(req, res);
-
-    tap.ok(executeSpy.called, 'should call internal execute function');
-    tap.ok(executeSpy.called, 'should call internal empty function');
     tap.end();
   });
 
@@ -97,13 +76,12 @@ tap.test('queue middleware module', tap => {
     const badMiddlewareSpy = sinon.spy((req, res, next) => {
       next('something bad happend.');
     });
-    const error = queue.__get__('error');
-    const errorSpy = sinon.spy(error);
-    queue.__set__('error', errorSpy);
+    const endSpy = sinon.spy(res.end);
+    res.end = endSpy;
     const queueMiddleware = queue(badMiddlewareSpy);
     queueMiddleware(req, res);
     tap.ok(badMiddlewareSpy.calledOnce, 'should call error middleware once');
-    tap.ok(errorSpy.calledOnce, 'should call internal error once');
+    tap.ok(endSpy.calledOnce, 'should call res.end once');
     tap.end();
   });
 
@@ -113,13 +91,12 @@ tap.test('queue middleware module', tap => {
       throw new Error("something went wrong.");
       next();
     });
-    const error = queue.__get__('error');
-    const errorSpy = sinon.spy(error);
-    queue.__set__('error', errorSpy);
+    const endSpy = sinon.spy(res.end);
+    res.end = endSpy;
     const queueMiddleware = queue(badMiddlewareSpy);
     queueMiddleware(req, res);
     tap.ok(badMiddlewareSpy.calledOnce, 'should call error middleware once');
-    tap.ok(errorSpy.calledOnce, 'should call internal error once');
+    tap.ok(endSpy.calledOnce, 'should call res.end once');
     tap.end();
   });
 
@@ -130,15 +107,24 @@ tap.test('queue middleware module', tap => {
     const badMiddlewareSpy = sinon.spy((req, res, next) => {
       next(errMsg);
     });
-    const error = queue.__get__('error');
-    const errorSpy = sinon.spy(error);
-    queue.__set__('error', errorSpy);
+    const endSpy = sinon.spy(res.end);
+    res.end = endSpy;
     const queueMiddleware = queue(badMiddlewareSpy);
     queueMiddleware(req, res);
     tap.ok(badMiddlewareSpy.calledOnce, 'should call error middleware once');
-    tap.ok(errorSpy.notCalled, 'should not call internal error once');
+    tap.ok(endSpy.notCalled, 'should not call res.end');
     tap.ok(req.error.calledOnce, 'should call custom error function');    
     tap.ok(req.error.lastCall.args[0] === errMsg, 'should call custom error function with error message as first argument');    
+    tap.end();
+  });
+
+  tap.test('when used without a middleware', tap => {
+    tap.plan(1);
+    const endSpy = sinon.spy(res.end);
+    res.end = endSpy;
+    const queueMiddleware = queue();
+    queueMiddleware(req, res);
+    tap.ok(endSpy.calledOnce, 'should call res.end once');
     tap.end();
   });
 

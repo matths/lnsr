@@ -1,5 +1,4 @@
 const tap = require('tap');
-const rewire = require('rewire');
 const httpMocks = require('node-mocks-http');
 const blockFilter = require('../../../../lib/filters/block');
 
