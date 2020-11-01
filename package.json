@@ -3,8 +3,10 @@
   "version": "0.2.0",
   "description": "lean server - small node.js bits & modules to create a lean and simple sever from scratch",
   "main": "index.js",
+  "module": "index.mjs",
   "scripts": {
     "example": "node example/index.js",
+    "build": "rollup --config",
     "test": "c8 tap -Rspec --no-cov test"
   },
   "keywords": [
@@ -24,9 +26,12 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^15.1.0",
+    "@rollup/plugin-node-resolve": "^9.0.0",
     "c8": "^7.3.5",
     "node-mocks-http": "^1.9.0",
     "sinon": "^9.2.1",
+    "rollup": "^2.32.1",
     "tap": "^14.10.8"
   }
 }
