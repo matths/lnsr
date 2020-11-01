@@ -1,7 +1,6 @@
-const tap = require('tap');
-const sinon = require('sinon');
-const httpMocks = require('node-mocks-http');
-const contentTypeFilter = require('../../../../lib/filters/content-type');
+import tap from 'tap';
+import httpMocks from 'node-mocks-http';
+import contentTypeFilter from '../../../../lib/filters/content-type';
 
 tap.test('content-type filter module', tap => {
   

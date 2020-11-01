@@ -1,6 +1,6 @@
-const tap = require('tap');
-const httpMocks = require('node-mocks-http');
-const hostnameFilter = require('../../../../lib/filters/host');
+import tap from 'tap';
+import httpMocks from 'node-mocks-http';
+import hostnameFilter from '../../../../lib/filters/host';
 
 tap.test('host filter module', tap => {
   

@@ -1,5 +1,5 @@
-const tap = require('tap');
-const uncurry = require('../../../../lib/utils/uncurry');
+import tap from 'tap';
+import uncurry from '../../../../lib/utils/uncurry';
 
 tap.test('uncurry', tap => {
   let req;

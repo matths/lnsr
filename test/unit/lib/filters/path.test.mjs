@@ -1,7 +1,6 @@
-const tap = require('tap');
-const httpMocks = require('node-mocks-http');
-
-const pathFilter = require('../../../../lib/filters/path');
+import tap from 'tap';
+import httpMocks from 'node-mocks-http';
+import pathFilter from '../../../../lib/filters/path';
 
 tap.test('path filter module', tap => {
   

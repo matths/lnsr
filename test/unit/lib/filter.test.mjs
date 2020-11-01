@@ -1,8 +1,8 @@
-const tap = require('tap');
-const sinon = require('sinon');
-const httpMocks = require('node-mocks-http');
-
-const filterMiddleware = require('../../../lib/filter');
+import { EventEmitter } from 'events';
+import tap from 'tap';
+import sinon from 'sinon';
+import httpMocks from 'node-mocks-http';
+import filterMiddleware from '../../../lib/filter';
 
 tap.test('request filter middleware module', tap => {
   let req, res, returnTrue, returnFalse;
@@ -13,7 +13,7 @@ tap.test('request filter middleware module', tap => {
       url: '/user/Bob',
     });
     res = httpMocks.createResponse({
-      eventEmitter: require('events').EventEmitter
+      eventEmitter: EventEmitter
     });
     returnTrue = () => true;
     returnFalse = () => false;
@@ -23,7 +23,7 @@ tap.test('request filter middleware module', tap => {
   tap.test('when created', tap => {
     tap.plan(1);
 
-    middleware = (req, res, next) => {
+    const middleware = (req, res, next) => {
         next();
     };
 

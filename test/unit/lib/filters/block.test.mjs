@@ -1,6 +1,6 @@
-const tap = require('tap');
-const httpMocks = require('node-mocks-http');
-const blockFilter = require('../../../../lib/filters/block');
+import tap from 'tap';
+import httpMocks from 'node-mocks-http';
+import blockFilter from '../../../../lib/filters/block';
 
 tap.test('filter module', tap => {
   let req;

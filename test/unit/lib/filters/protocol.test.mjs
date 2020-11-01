@@ -1,7 +1,6 @@
-const tap = require('tap');
-const sinon = require('sinon');
-const httpMocks = require('node-mocks-http');
-const protocolFilter = require('../../../../lib/filters/protocol');
+import tap from 'tap';
+import httpMocks from 'node-mocks-http';
+import protocolFilter from '../../../../lib/filters/protocol';
 
 tap.test('protocol filter module', tap => {
   

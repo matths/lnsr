@@ -1,8 +1,8 @@
-const tap = require('tap');
-const sinon = require('sinon');
-const httpMocks = require('node-mocks-http');
-
-const queue = require('../../../lib/queue');
+import tap from 'tap';
+import sinon from 'sinon';
+import httpMocks from 'node-mocks-http';
+import { EventEmitter } from "events";
+import queue from '../../../lib/queue';
 
 tap.test('queue middleware module', tap => {
   let req, res;
@@ -15,7 +15,7 @@ tap.test('queue middleware module', tap => {
     });
 
     res = httpMocks.createResponse({
-      eventEmitter: require('events').EventEmitter
+      eventEmitter: EventEmitter
     });
 
     done();

@@ -1,7 +1,6 @@
-const tap = require('tap');
-const httpMocks = require('node-mocks-http');
-
-const simplePathFilter = require('../../../../lib/filters/simple-path');
+import tap from 'tap';
+import httpMocks from 'node-mocks-http';
+import simplePathFilter from '../../../../lib/filters/simple-path';
 
 tap.test('filter module', tap => {
   let req;

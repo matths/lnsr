@@ -1,8 +1,8 @@
-const tap = require('tap');
-const sinon = require('sinon');
-const httpMocks = require('node-mocks-http');
-
-const error = require('../../../lib/error');
+import { EventEmitter } from 'events';
+import tap from 'tap';
+import sinon from 'sinon';
+import httpMocks from 'node-mocks-http';
+import error from '../../../lib/error';
 
 tap.test('error middleware module', tap => {
   let req, res;
@@ -15,7 +15,7 @@ tap.test('error middleware module', tap => {
     });
 
     res = httpMocks.createResponse({
-      eventEmitter: require('events').EventEmitter
+      eventEmitter: EventEmitter
     });
 
     done();
