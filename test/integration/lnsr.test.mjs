@@ -2,7 +2,7 @@ import EventEmitter from 'events';
 import tap from 'tap';
 import sinon from 'sinon';
 import httpMocks from 'node-mocks-http';
-import {get, post} from '../../lib/lnsr';
+import {get, post, path} from '../../lib/lnsr';
 
 tap.test('lnsr library', tap => {
   let req, res, middlewareSpy, nextSpy;
@@ -42,6 +42,20 @@ tap.test('lnsr library', tap => {
     mw(req, res, nextSpy);
     tap.strictEqual(typeof mw, 'function', 'should return a middleware function');
     tap.strictEqual(middlewareSpy.callCount, 0, 'should not call middleware');
+    tap.end();
+  });
+
+  tap.test('when using path middleware', tap => {
+    tap.plan(2);
+    const req = httpMocks.createRequest({
+      method: 'GET',
+      url: '/user/Bob'
+    });
+
+    const mw = path('/user/:username', middlewareSpy);
+    mw(req, res, nextSpy);
+    tap.strictEqual(typeof mw, 'function', 'should return a middleware function');
+    tap.true(middlewareSpy.calledOnce, 'should call middleware');
     tap.end();
   });
 
