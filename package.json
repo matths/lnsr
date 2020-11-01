@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "example": "node example/index.js",
-    "test": "tap -Rspec --coverage test"
+    "test": "c8 tap -Rspec --no-cov test"
   },
   "keywords": [
     "lean",
@@ -24,6 +24,7 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "c8": "^7.3.5",
     "node-mocks-http": "^1.9.0",
     "sinon": "^9.2.1",
     "tap": "^14.10.8"
