@@ -7,7 +7,7 @@
   "scripts": {
     "example": "node example/index.js",
     "build": "rollup --config",
-    "test": "c8 tap -Rspec --no-cov test"
+    "test": "c8 --clean --all tap -Rspec --no-cov test"
   },
   "keywords": [
     "lean",
