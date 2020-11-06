@@ -1,14 +1,14 @@
 import tap from 'tap';
 import httpMocks from 'node-mocks-http';
-import contentTypeFilter from '../../../../lib/filters/content-type.mjs';
+import contentType from '../../../../lib/filters/content-type.mjs';
 
 tap.test('content-type filter module', tap => {
   
   tap.test('when created', tap => {
     tap.plan(2);
 
-    tap.false(contentTypeFilter(), 'should return false when no content-type is specified');
-    tap.strictEqual(typeof contentTypeFilter('text/plain'), 'function', 'should return a function');
+    tap.false(contentType(), 'should return false when no content-type is specified');
+    tap.strictEqual(typeof contentType('text/plain'), 'function', 'should return a function');
 
     tap.end();
   });
@@ -24,8 +24,8 @@ tap.test('content-type filter module', tap => {
       }
     });
 
-    tap.true(contentTypeFilter('text/plain')(req), 'should match content-type');
-    tap.false(contentTypeFilter('text/html')(req), 'should not match content-type');
+    tap.true(contentType('text/plain')(req), 'should match content-type');
+    tap.false(contentType('text/html')(req), 'should not match content-type');
 
     tap.end();
   });
@@ -41,8 +41,8 @@ tap.test('content-type filter module', tap => {
       }
     });
 
-    tap.true(contentTypeFilter(['text/plain', 'text/html'])(req), 'should match content-type');
-    tap.false(contentTypeFilter(['application/json', 'text/javascript'])(req), 'should not match content-type');
+    tap.true(contentType(['text/plain', 'text/html'])(req), 'should match content-type');
+    tap.false(contentType(['application/json', 'text/javascript'])(req), 'should not match content-type');
 
     tap.end();
   });
@@ -55,8 +55,8 @@ tap.test('content-type filter module', tap => {
       url: '/'
     });
 
-    tap.false(contentTypeFilter('text/plain')(req), 'should not match content-type');
-    tap.false(contentTypeFilter(['application/json', 'text/javascript'])(req), 'should not match content-type');
+    tap.false(contentType('text/plain')(req), 'should not match content-type');
+    tap.false(contentType(['application/json', 'text/javascript'])(req), 'should not match content-type');
 
     tap.end();
   });

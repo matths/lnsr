@@ -2,7 +2,7 @@ import { EventEmitter } from 'events';
 import tap from 'tap';
 import sinon from 'sinon';
 import httpMocks from 'node-mocks-http';
-import authorizationMiddleware from '../../../../lib/interact/authorization.mjs';
+import authorize from '../../../../lib/interact/authorize.mjs';
 
 tap.test('authoriztion middleware module', tap => {
 
@@ -11,7 +11,7 @@ tap.test('authoriztion middleware module', tap => {
     const middlewareSpy = sinon.spy((req, res, next) => {
       next();
     });
-    tap.strictEqual(typeof authorizationMiddleware({}, middlewareSpy), 'function', 'should return a middleware function');
+    tap.strictEqual(typeof authorize({}, middlewareSpy), 'function', 'should return a middleware function');
     tap.end();
   });
 
@@ -34,7 +34,7 @@ tap.test('authoriztion middleware module', tap => {
       next();
     });
 
-    authorizationMiddleware({users: { agent007: 'top-secret' }, realm: 'Keep out area!'}, middlewareSpy)(req, res, nextSpy);
+    authorize({users: { agent007: 'top-secret' }, realm: 'Keep out area!'}, middlewareSpy)(req, res, nextSpy);
     tap.strictEqual(middlewareSpy.callCount, 0, 'should not call middleware');
     tap.strictEqual(nextSpy.callCount, 0, 'should not call next');
     tap.end();
@@ -62,7 +62,7 @@ tap.test('authoriztion middleware module', tap => {
       next();
     });
 
-    authorizationMiddleware({users: { agent007: 'top-secret' }, realm: 'Keep out area!'}, middlewareSpy)(req, res, nextSpy);
+    authorize({users: { agent007: 'top-secret' }, realm: 'Keep out area!'}, middlewareSpy)(req, res, nextSpy);
     tap.strictEqual(middlewareSpy.callCount, 0, 'should not call middleware');
     tap.strictEqual(nextSpy.callCount, 0, 'should not call next');
     tap.end();
@@ -87,7 +87,7 @@ tap.test('authoriztion middleware module', tap => {
       next();
     });
 
-    authorizationMiddleware({users: { agent007: 'top-secret' }, realm: 'Keep out area!'}, middlewareSpy)(req, res, nextSpy);
+    authorize({users: { agent007: 'top-secret' }, realm: 'Keep out area!'}, middlewareSpy)(req, res, nextSpy);
     tap.true(middlewareSpy.calledOnce, 'should call middleware once');
     tap.true(nextSpy.calledOnce, 'should call next');
     tap.end();

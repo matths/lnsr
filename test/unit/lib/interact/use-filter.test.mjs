@@ -2,7 +2,7 @@ import { EventEmitter } from 'events';
 import tap from 'tap';
 import sinon from 'sinon';
 import httpMocks from 'node-mocks-http';
-import filterMiddleware from '../../../lib/filter';
+import userFilter from '../../../../lib/interact/use-filter';
 
 tap.test('request filter middleware module', tap => {
   let req, res, returnTrue, returnFalse;
@@ -27,7 +27,7 @@ tap.test('request filter middleware module', tap => {
       next();
     };
 
-    tap.strictEqual(typeof filterMiddleware(returnTrue, middleware), 'function', 'should return a middleware function');
+    tap.strictEqual(typeof userFilter(returnTrue, middleware), 'function', 'should return a middleware function');
     tap.end();
   });
 
@@ -39,7 +39,7 @@ tap.test('request filter middleware module', tap => {
       next();
     });
 
-    filterMiddleware(false, middlewareSpy)(req, res, nextSpy);
+    userFilter(false, middlewareSpy)(req, res, nextSpy);
     tap.strictEqual(middlewareSpy.callCount, 0, 'should not call middleware');
     tap.ok(nextSpy.calledOnce, 'should call next function');
     tap.end();
@@ -54,7 +54,7 @@ tap.test('request filter middleware module', tap => {
       next();
     });
 
-    filterMiddleware(returnTrue, middlewareSpy)(req, res, nextSpy);
+    userFilter(returnTrue, middlewareSpy)(req, res, nextSpy);
     tap.ok(middlewareSpy.calledOnce, 'should call middleware once');
     tap.ok(middlewareSpy.calledWith(req, res), 'should call middleware with req and res');
     tap.strictEqual(typeof middlewareSpy.lastCall.lastArg, 'function', 'should call middleware with a next function');
@@ -70,7 +70,7 @@ tap.test('request filter middleware module', tap => {
       next();
     });
 
-    filterMiddleware(returnFalse, middlewareSpy)(req, res, nextSpy);
+    userFilter(returnFalse, middlewareSpy)(req, res, nextSpy);
     tap.ok(middlewareSpy.notCalled, 'should not call middleware once');
     tap.ok(nextSpy.calledOnce, 'should call next function once after the middleware');
     tap.end();
@@ -84,7 +84,7 @@ tap.test('request filter middleware module', tap => {
       next();
     });
 
-    filterMiddleware([returnTrue, returnTrue], middlewareSpy)(req, res, nextSpy);
+    userFilter([returnTrue, returnTrue], middlewareSpy)(req, res, nextSpy);
     tap.ok(middlewareSpy.calledOnce, 'should call middleware once');
     tap.ok(middlewareSpy.calledWith(req, res), 'should call middleware with req and res');
     tap.strictEqual(typeof middlewareSpy.lastCall.lastArg, 'function', 'should call middleware with a next function');
@@ -100,7 +100,7 @@ tap.test('request filter middleware module', tap => {
       next();
     });
 
-    filterMiddleware([returnTrue, returnFalse], middlewareSpy)(req, res, nextSpy);
+    userFilter([returnTrue, returnFalse], middlewareSpy)(req, res, nextSpy);
     tap.ok(middlewareSpy.notCalled, 'should not call middleware once');
     tap.ok(nextSpy.calledOnce, 'should call next function once after the middleware');
     tap.end();

@@ -1,14 +1,14 @@
 import tap from 'tap';
 import httpMocks from 'node-mocks-http';
-import hostnameFilter from '../../../../lib/filters/host.mjs';
+import host from '../../../../lib/filters/host.mjs';
 
 tap.test('host filter module', tap => {
   
   tap.test('when created', tap => {
     tap.plan(2);
 
-    tap.false(hostnameFilter(), 'should return false when no hostname is specified');
-    tap.strictEqual(typeof hostnameFilter('test-a.com'), 'function', 'should return a function');
+    tap.false(host(), 'should return false when no hostname is specified');
+    tap.strictEqual(typeof host('test-a.com'), 'function', 'should return a function');
 
     tap.end();
   });
@@ -25,8 +25,8 @@ tap.test('host filter module', tap => {
       params: {}
     });
 
-    tap.true(hostnameFilter('test-a.com')(req), 'should match hostname');
-    tap.false(hostnameFilter('test-b.com')(req), 'should not match hostname');
+    tap.true(host('test-a.com')(req), 'should match hostname');
+    tap.false(host('test-b.com')(req), 'should not match hostname');
 
     tap.end();
   });
@@ -42,7 +42,7 @@ tap.test('host filter module', tap => {
       params: {}
     });
 
-    tap.false(hostnameFilter('test-a.com')(req), 'should not match hostname');
+    tap.false(host('test-a.com')(req), 'should not match hostname');
 
     tap.end();
   });
