@@ -8,8 +8,8 @@ tap.test('pipe', tap => {
     const divideBy100 = num => num / 100;
     const roundTo2decimals = num => parseFloat(num).toFixed(2);
     const dotToComma = str => String(str).replace('.', ',');
-    const addSeparators = str => String(str).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    const addCurrency = str => String(str) + " €";
+    const addSeparators = str => String(str).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    const addCurrency = str => String(str) + ' €';
 
     const formatCentsAsEuro = num =>
       addCurrency(
@@ -21,7 +21,7 @@ tap.test('pipe', tap => {
           )
         )
       );
-      const formatCentsAsEuroPiped = pipe(divideBy100, roundTo2decimals, dotToComma, addSeparators, addCurrency);
+    const formatCentsAsEuroPiped = pipe(divideBy100, roundTo2decimals, dotToComma, addSeparators, addCurrency);
 
     tap.strictEqual(typeof formatCentsAsEuroPiped, 'function', 'pipe should return a function');
     tap.strictEqual(formatCentsAsEuroPiped(1234567890), '12.345.678,90 €', 'should return correct result');
@@ -29,4 +29,4 @@ tap.test('pipe', tap => {
     tap.end();
   });
   tap.end();
-})
+});

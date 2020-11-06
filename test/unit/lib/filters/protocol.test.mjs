@@ -45,4 +45,4 @@ tap.test('protocol filter module', tap => {
   });
 
   tap.end();
-})
+});

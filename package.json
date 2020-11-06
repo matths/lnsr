@@ -5,8 +5,9 @@
   "main": "index.js",
   "module": "index.mjs",
   "scripts": {
+    "lint": "eslint --ext js,mjs .",
     "build": "rollup --config",
-    "test": "c8 --clean --all --exclude=rollup.config.js --exclude=index.js --exclude=test tap -Rspec --no-cov test"
+    "test": "c8 --clean --all --exclude=.eslintrc.js --exclude=rollup.config.js --exclude=index.js --exclude=test tap -Rspec --no-cov test"
   },
   "keywords": [
     "lean",
@@ -28,6 +29,7 @@
     "@rollup/plugin-commonjs": "^15.1.0",
     "@rollup/plugin-node-resolve": "^9.0.0",
     "c8": "^7.3.5",
+    "eslint": "^7.12.1",
     "node-mocks-http": "^1.9.0",
     "rollup": "^2.33.1",
     "sinon": "^9.2.1",

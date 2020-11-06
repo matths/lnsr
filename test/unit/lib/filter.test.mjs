@@ -24,7 +24,7 @@ tap.test('request filter middleware module', tap => {
     tap.plan(1);
 
     const middleware = (req, res, next) => {
-        next();
+      next();
     };
 
     tap.strictEqual(typeof filterMiddleware(returnTrue, middleware), 'function', 'should return a middleware function');
@@ -113,4 +113,4 @@ tap.test('request filter middleware module', tap => {
   });
 
   tap.end();
-})
+});

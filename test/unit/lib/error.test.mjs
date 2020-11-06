@@ -33,7 +33,7 @@ tap.test('error middleware module', tap => {
   tap.test('when returned middleware function is used with a custom error handler', tap => {
     tap.plan(2);
     const customError = sinon.fake();
-    const nextSpy = sinon.spy((req, res, next) => {});
+    const nextSpy = sinon.spy(() => {});
 
     const errorMiddleware = error(customError);
     errorMiddleware(req, res, nextSpy);
@@ -45,7 +45,7 @@ tap.test('error middleware module', tap => {
 
   tap.test('when returned middleware function is used without a custom error handler', tap => {
     tap.plan(2);
-    const nextSpy = sinon.spy((req, res, next) => {});
+    const nextSpy = sinon.spy(() => {});
 
     const errorMiddleware = error();
     errorMiddleware(req, res, nextSpy);
@@ -62,4 +62,4 @@ tap.test('error middleware module', tap => {
   });
 
   tap.end();
-})
+});

@@ -17,7 +17,7 @@ tap.test('filter module', tap => {
     tap.plan(1);
     const filter = blockFilter('Bob');
     filter(req);
-    tap.true(typeof filter === "function", 'should return a function');
+    tap.true(typeof filter === 'function', 'should return a function');
     tap.end();
   });
 
@@ -34,4 +34,4 @@ tap.test('filter module', tap => {
   });
 
   tap.end();
-})
+});

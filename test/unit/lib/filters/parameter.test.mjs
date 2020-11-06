@@ -17,7 +17,7 @@ tap.test('parameter filter module', tap => {
     tap.plan(1);
     const filter = parameterFilter('bw', 1);
     filter(req);
-    tap.true(typeof filter === "function", 'should return a function');
+    tap.true(typeof filter === 'function', 'should return a function');
     tap.end();
   });
 
@@ -38,4 +38,4 @@ tap.test('parameter filter module', tap => {
   });
 
   tap.end();
-})
+});

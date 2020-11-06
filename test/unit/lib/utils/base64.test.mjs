@@ -16,4 +16,4 @@ tap.test('base64', tap => {
   });
 
   tap.end();
-})
+});

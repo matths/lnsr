@@ -22,7 +22,7 @@ tap.test('lnsr library', tap => {
       next();
     });
 
-    nextSpy = sinon.spy((req, res, next) => {});
+    nextSpy = sinon.spy(() => {});
 
     done();
   });
@@ -66,4 +66,4 @@ tap.test('lnsr library', tap => {
   });
 
   tap.end();
-})
+});

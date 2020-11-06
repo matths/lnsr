@@ -20,7 +20,7 @@ tap.test('content-type filter module', tap => {
       method: 'GET',
       url: '/',
       headers: {
-          'content-type': 'text/plain'
+        'content-type': 'text/plain'
       }
     });
 
@@ -37,7 +37,7 @@ tap.test('content-type filter module', tap => {
       method: 'GET',
       url: '/',
       headers: {
-          'content-type': 'text/plain'
+        'content-type': 'text/plain'
       }
     });
 
@@ -62,4 +62,4 @@ tap.test('content-type filter module', tap => {
   });
 
   tap.end();
-})
+});

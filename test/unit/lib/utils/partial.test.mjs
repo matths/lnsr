@@ -14,4 +14,4 @@ tap.test('partial', tap => {
     tap.end();
   });
   tap.end();
-})
+});

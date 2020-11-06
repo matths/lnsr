@@ -1,7 +1,7 @@
 import tap from 'tap';
 import sinon from 'sinon';
 import httpMocks from 'node-mocks-http';
-import { EventEmitter } from "events";
+import { EventEmitter } from 'events';
 import queue from '../../../lib/queue';
 
 tap.test('queue middleware module', tap => {
@@ -87,9 +87,8 @@ tap.test('queue middleware module', tap => {
 
   tap.test('when used with a middleware throwing an error/exception', tap => {
     tap.plan(2);
-    const badMiddlewareSpy = sinon.spy((req, res, next) => {
-      throw new Error("something went wrong.");
-      next();
+    const badMiddlewareSpy = sinon.spy(() => {
+      throw new Error('something went wrong.');
     });
     const endSpy = sinon.spy(res.end);
     res.end = endSpy;
@@ -102,7 +101,7 @@ tap.test('queue middleware module', tap => {
 
   tap.test('when used with an error middleware and a custom req.error function', tap => {
     tap.plan(4);
-    req.error = sinon.spy((err, req, res, next) => {});
+    req.error = sinon.spy(() => {});
     const errMsg = 'something bad happend.';
     const badMiddlewareSpy = sinon.spy((req, res, next) => {
       next(errMsg);
@@ -135,4 +134,4 @@ tap.test('queue middleware module', tap => {
   });
 
   tap.end();
-})
+});

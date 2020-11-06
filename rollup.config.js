@@ -19,4 +19,4 @@ export default {
     nodeResolve({ preferBuiltins: true }),
     commonjs()
   ]
- };
+};

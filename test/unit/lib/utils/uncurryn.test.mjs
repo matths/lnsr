@@ -16,4 +16,4 @@ tap.test('uncurryn', tap => {
     tap.end();
   });
   tap.end();
-})
+});

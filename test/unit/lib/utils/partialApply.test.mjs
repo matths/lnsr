@@ -12,4 +12,4 @@ tap.test('partialApply', tap => {
     tap.end();
   });
   tap.end();
-})
+});

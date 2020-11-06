@@ -10,4 +10,4 @@ tap.test('uncurry', tap => {
     tap.end();
   });
   tap.end();
-})
+});
