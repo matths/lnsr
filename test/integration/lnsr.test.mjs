@@ -32,7 +32,7 @@ tap.test('lnsr library', tap => {
     const mw = get('/user/:username', middlewareSpy);
     mw(req, res, nextSpy);
     tap.strictEqual(typeof mw, 'function', 'should return a middleware function');
-    tap.true(middlewareSpy.calledOnce, 'should call middleware');
+    tap.strictEqual(middlewareSpy.callCount, 0, 'should not call middleware');
     tap.end();
   });
 
