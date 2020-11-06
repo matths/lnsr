@@ -1,6 +1,6 @@
 import tap from 'tap';
 import httpMocks from 'node-mocks-http';
-import hostnameFilter from '../../../../lib/filters/host';
+import hostnameFilter from '../../../../lib/filters/host.mjs';
 
 tap.test('host filter module', tap => {
   

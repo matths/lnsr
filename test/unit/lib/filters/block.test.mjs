@@ -1,6 +1,6 @@
 import tap from 'tap';
 import httpMocks from 'node-mocks-http';
-import blockFilter from '../../../../lib/filters/block';
+import blockFilter from '../../../../lib/filters/block.mjs';
 
 tap.test('filter module', tap => {
   let req;

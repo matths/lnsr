@@ -1,6 +1,6 @@
 import tap from 'tap';
 import httpMocks from 'node-mocks-http';
-import methodFilter from '../../../../lib/filters/method';
+import methodFilter from '../../../../lib/filters/method.mjs';
 
 tap.test('method filter module',  tap => {
   

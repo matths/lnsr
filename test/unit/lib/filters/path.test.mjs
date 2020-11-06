@@ -1,6 +1,6 @@
 import tap from 'tap';
 import httpMocks from 'node-mocks-http';
-import pathFilter from '../../../../lib/filters/path';
+import pathFilter from '../../../../lib/filters/path.mjs';
 
 tap.test('path filter module', tap => {
   

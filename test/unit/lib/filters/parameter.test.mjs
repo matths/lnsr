@@ -1,6 +1,6 @@
 import tap from 'tap';
 import httpMocks from 'node-mocks-http';
-import parameterFilter from '../../../../lib/filters/parameter';
+import parameterFilter from '../../../../lib/filters/parameter.mjs';
 
 tap.test('parameter filter module', tap => {
   let req;

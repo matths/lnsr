@@ -1,6 +1,6 @@
 import tap from 'tap';
 import httpMocks from 'node-mocks-http';
-import contentTypeFilter from '../../../../lib/filters/content-type';
+import contentTypeFilter from '../../../../lib/filters/content-type.mjs';
 
 tap.test('content-type filter module', tap => {
   
