@@ -212,8 +212,8 @@ const filters = {
 const filter2middleware = filter => uncurry(compose(curry(filterMiddleware), filter));
 const path = filter2middleware(pathFilter);
 
-const get = (pathPattern, middleware) => partial(filterMiddleware, [methodFilter('get', pathFilter(pathPattern))])(middleware);
-const post = (pathPattern, middleware) => partial(filterMiddleware, [methodFilter('post', pathFilter(pathPattern))])(middleware);
+const get = (pathPattern, middleware) => partial(filterMiddleware, [methodFilter('get'), pathFilter(pathPattern)])(middleware);
+const post = (pathPattern, middleware) => partial(filterMiddleware, [methodFilter('post'), pathFilter(pathPattern)])(middleware);
 
 exports.authorization = authorizationInteractor;
 exports.error = errorMiddleware;
