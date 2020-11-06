@@ -6,7 +6,7 @@
   "module": "index.mjs",
   "scripts": {
     "build": "rollup --config",
-    "test": "c8 --clean --all tap -Rspec --no-cov test"
+    "test": "c8 --clean --all --exclude=rollup.config.js --exclude=index.js --exclude=test tap -Rspec --no-cov test"
   },
   "keywords": [
     "lean",
