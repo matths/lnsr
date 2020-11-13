@@ -1,152 +1,236 @@
-# lnsr
+<img src="logo/lnsr.svg" alt="connect logo" width="120px">
+
+**lnsr** – a <u>**l**</u>ea<u>**n**</u> <u>**s**</u>erve<u>**r**</u>
 
 ![tests](https://github.com/matths/lnsr/workflows/tests/badge.svg)
 
-lnsr (lean server) is a small (and maybe growing) collection of small [node][node.js] modules to create a lean and simple sever from scratch.
-Every part of it is a [connect][connect github] and [express][express github] compatible _middleware_.
+lnsr is a framework to create and completely understand your next nodejs server application.
 
-In contrast to connect and express, there's no createServer that will create an app object to mount middleware functions or which does the routing.
-Instead there's a *queue* middleware, which runs through a list of middleware functions. It also supports the convention to use a third parameter next.
-The combination of the queue with filtering and other middleware modules might lead to a flexible and transparent routing of requests to the right middleware that is eventually sends out a response.
+The framework by itself is actually no server and it doesn't create a server (no `var app = connect();` or `var app = express();`, etc.). Because node already offers the necessary server, lnsr offers just a few higher order functions, mainly **[queue](#queue)** and **[filters](#filters)**, to let you glue [express][express github] and/or [connect][connect github] compatible middleware together and transparently create your next [node][node.js] server applications without magic, e.g. `app.use()`.
 
-While other node frameworks speak of a middleware stack, we like the idea of a queue, following a first-in-first-out principle.
-The driving goal for this project was to understand what such frameworks exactly do. By separating every task into its own middleware, it tries to make things more easy to understand. It also tries to minimize the use of outside dependencies (beside [lodash][lodash]).
+## Getting started
 
-lnsr is not meant as a piece of production ready software but a growing attempt to learn and document all of our findings.
+### Install module
 
-### example
+Install the module using you favorite package manager to you application package.
 
-```js
-var lnsr = require('./lnsr.js')
-var http = require('http')
-var https = require('https')
-var fs = require('fs')
-
-var redirectToWWW = function (req, res, next) {
-  res.writeHead(302, {'Location': 'http://www.' + req.headers.host + req.url});
-  res.end();
-}
-
-var sayHello = function (req, res, next) {
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello ' + req.params.name);
-};
-
-var notFound = function (req, res, next) {
-  res.writeHead(404, {'Content-Type': 'text/plain'});
-  res.end('not found.');
-};
-
-// use your middleware functions as arguments to queue
-var middleware = lnsr.queue(
-  lnsr.host('example.com', redirectToWWW),
-  lnsr.host('www.example.com', lnsr.queue(
-    lnsr.filter.method('post', queue(
-      parseBody
-    ))
-    lnsr.filter.method('get', queue(
-      lnsr.filter.path('/hello/:name', sayHello),
-      lnsr.filter.path('/user/:user-id', profile),
-      lnsr.filter.path('/user/:user-id/logout', logout)
-    )),
-  )),
-  notFound
-);
-
-//create node.js http and https server and listen on ports
-http.createServer(middleware).listen(8080);
-
-var options = {
-  key: fs.readFileSync('ssl/key.pem'),
-  cert: fs.readFileSync('ssl/cert.pem')
-}
-https.createServer(options, requestListener).listen(8443);
+```bash
+$ npm install --save "github:matths/lnsr#develop"
+$ yarn add https://github.com/matths/lnsr#develop
 ```
 
-## Introduction
+### Implement your server
 
-### server
-[node.js] provides already everything to come up with a [http][node.js http] / [https][node.js https] server. So almost every framworks entrypoint usually is the requestListener attached to either http.createServer or https.createServer. The requestListener itself has two arguments, the Request and Response objects for the current call to the server.
+Routing requests is easy and transparent using **queues** and **filters** with less magic.
 
-### middleware
+```javascript
+import {createServer} from 'http';
+import {queue, useFilter, filters as f} from 'lnsr/index.mjs';
 
-Everything is a middleware. Starting from the very first requestListener one could either manage everything within that or hand-over the task of responding to the request to further functions. The established concept for this hand-over is called middleware. A middleware ist a function similar to the requestListener, but has in contrast a third parameter next. So each middleware has one of these three options.
+const lnsr = queue(
+  host('example.com', redirectToWww),
+  host('www.example.com', queue(
+    useFilter(f.contentType('application/json'), handleApiRequest),
+    useFilter(f.method('post'), parseBody),
+    useFilter([f.method('get'), f.path('/user/:user')], showUser),
+    useFilter([f.method('post'), f.path('/user/:user')], queue(
+      saveUser,
+      showUser
+    ),
+    showStart
+  ),
+  notFound
+  )
+)
 
-- respond to the request and do not call next
-- do not respond and trigger the handover to another middleware by calling next
-- call next with a parameter in case of an error
+const server = createServer(lnsr);
+server.listen(80, '0.0.0.0');
+```
 
-@grncdr has a nice short introduction on [connect middleware].
+## Documentation
+
+**lnsr** lets you create a node based server application with less magic, fewer hidden logic or side-effects, but takes full advantage of the well-knwon middleware concept introduced by connect and express.
+
+If you already know how to create a plain http/https server with node, and what a requestListener or a middleware function is, you can skip forward to queue and filters.
+
+### Sever
+
+```javascript
+import {createServer} from 'http';
+
+const requestListener = (req, res) => {
+  // side-effects on req, res
+  res.end('hello world');
+};
+const server = createServer(requestListener);
+server.listen(port, host);
+```
+
+[node.js] provides already everything to come up with a [http][node.js http] / [https][node.js https] **server**. So nothing to re-invent here.
+The server uses object-oriented style concepts. Main entrypoint usually is the request event one can bind a **requestListener** function to.
+
+It accepts two parameters, **request** and **response** (objects by itself), and doesn't need a return a value. A request to the server can be answered using side effects like calling methods of the response object from within the request handler.
+In theory you could bind multiple requestListeners to the servers request event, but you'll rarely see this used. Some side effects can barely triggered twice, e.g. `res.end();`
+
+### Middleware
+
+```javascript
+const middlewareOne = (req, res, next) => {
+  req.sideEffect = true;
+  next();
+}
+
+const middlewareTwo = (req, res, next) => {
+  if (req.hasError) next('there was an error');
+  else next();
+}
+```
+
+Some time ago [connect][connect github] introduced the middleware concept, a middleware being a higher order function accepting a third argument beside request and response, a callback function `next()`
+
+Each middleware works still as a node server requestListener. A middleware can change its behavior because of side causes or trigger side effects, both because of the request and response object.
+But now, as long as the middleware doesn't answers/ends the http request, it can also trigger the next callback.
+
+Usually the next callback is triggered without any arguments. Depending on the used framework there are conventions for a single argument. The most basic one, expects `next(e)`to have in single argument in case of an error.
+
+```javascript
+const config = {stopWithError: 'emergency'};
+const createMiddleware = (config) =>
+  (req, res, next) =>
+    config.stop?next('stop'):next();
+```
+
+There's a bunch of middleware available and usually you can configure the middleware using factory methods which just create a middleware function.
+
+Now, the main reason to introduce the `next()` callback was to call multiple middleware functions instead of a single requestListener. And this is achieved by the frameworks own server object or `app`.
+
+**lnsr** doesn't introduce another object, but uses another higher order function to glue the middleware pieces together.
 
 ### queue
 
-To enable a middleware queue or stack and take advantage of the next() callback, you can just use the lnsr.queue middleware.
-It works either as a requestListener to the node http and https server, but also as a middleware itself, accepting a next parameter.
-In case of a fall-through, it would by itself call the next() callback.
+queue is a higher order function which returns by itself a middleware function / requestListener. It expects either an array of middleware functions as a single argument or middleware functions as multiple arguments.
 
-```js
-var requestListener = lnsr.queue(
-  lnsr.filter.host('user-and-books.com'. queue(
-    lnsr.filter.path('/user/:user-id', userMiddleware),
-    lnsr.filter.path('/user/books/', userBooksMiddleware),
-    lnsr.filter.path('/book/:book-id', bookMiddleware)
-  )),
-  lnsr.filter.host('another.com'. queue(
-  ))
+The middleware, when called, is then going to execute all middleware functions in the order applied, first in first out (fifo) before calling its own next callback.
+
+Because queue returns a middleware function, a queue invocation can be used as argument to queue as well to structure you middlewar.
+
+```javascript
+import {queue} from 'lnsr/index.mjs';
+
+const requestListener = queue(
+  logRequest,
+  parseBody,
+  queue(
+    showPage,
+    notFound
+  )
 );
 ```
 
-### filter
+### filters
 
-While other frameworks already provide a router, lnsr tries to implement some basic filter middleware modules.
-When a filter matches, Request and Response and the next() callback are hand-over to a specific middleware module (which could also be another queue).
-In case of no match, the next middleware in the surroundig queue is called.
-This enables a flexible routing mechanism in code.
+While other frameworks already provide a router, lnsr offers lean filter modules instead and a useFilter middleware creator function.
 
-Where are already some fitlers and more are possible and might follow in future:
+#### filter
 
-- protocol, filters by either 'http' or 'https'
-- host, is very similar and based on connects vhost middleware
-- method, filters by http method (get, post, put, ...)
-- path, matches with well-known path patterns (e.g. /path/:var). 
-- authentication, not yet implemented, but also an authentication header would be some kind of a filter
+A request filter when called with request as argument returns either true or false.
 
-Of cource we don't need to reinvent the wheel and can use established filtering middleware modules or build our own based on established helper methods, like [path-to-regexp][path-to-regexp]
+```javascript
+const getRequestFilter = (req) => req.method.toLowerCase()==='get';
+```
 
-### state
+But **lnsr** offers some filter creation functions to configure filters for convenience.
 
-- cookie
-- session
+```javascript
+import {filters as f} from 'lnsr/index.mjs';
 
-### parser
+const getRequestFilter = f.method('get');
+```
 
-- body
-- form
-- json
+#### useFilter
 
-### existing middleware (as a starting point)
+In the end a filter (true/false) makes the decision, if a middleware is a called or skipped. When skipped `next()` is called immediately.
+For that you can use `useFilter(filter, middleware)`.
 
-There's probably a huge number of existing middleware that is easily usable with connect, express and with lnsr, too. You probably would not build everything by yourself, so here's a list to get you started.
+```javascript
+import {queue, useFilter, filters as f} from 'lnsr/index.mjs';
+
+const parseBodyIfPost = useFilter(f.method('post'), parseBody);
+```
+
+#### createFilterMiddleware
+
+For convenience we created middleware factories for all filters so far.
+
+```javascript
+import {queue, method} from 'lnsr/index.mjs';
+
+const parseBodyIfPost = method('post', parseBody);
+```
+
+#### lnsr filters
+
+So far we have these filters available:
+
+- host, filter to implement virtual hosts
+- method, filters by http method (get, post, put, …)
+- path, matches with well-known path patterns (e.g. /path/:var) and adds var to req.params (side-effect!)
+- contentType, filters by content-type accepted by client
+- parameters, filters by parameters from querystring (`?pdf=1&lang=de`)
+- and others.
+
+### existing middleware
+
+There's probably a huge number of existing middleware that is easily usable with lnsr as it is with connect, express or others. You don't need to rebuild everything by yourself.
+
+Here are some useful examples.
 
 * [node-static] serving static files
 * [body-parser] parse content / payload of a http request (probably post or put)
-* [greenlock-express] provide and renew ssl certificates by letsencrypt
 * [morgan] server log file
+
+## Modules
+
+While the world goes forward and Javascript evolved, in nodejs there are still CommonJS modules everywhere.
+
+### ESM
+
+**lnsr** is written using syntactical sugar from ES6 and exporting functions using ESM import/export syntax, which also allows partial imports, etc.
+
+For this to work natively in nodejs, we need to use `.mjs` suffix.
+
+I would encourage to use ESM module syntax to use **lnsr**
+
+```javascript
+import {queue, method} from 'lnsr/index.mjs';
+
+const requestHandler = queue(
+  method('post', parseBody),
+  (req, res, next) => { res.end('have fun.'); }
+);
+```
+
+### CommonJS
+
+If you're in need to use CommonJS, we have a prebuilt module file you can `require()` all the stuff. We use rollupjs to bundle things together.
+
+```javascript
+const lnsr = require('lnsr'); // or 'lnsr/index.js'
+
+const requestHandler = lnsr.queue(
+  lnsr.method('post', parseBody),
+  (req, res, next) => { res.end('have fun.'); }
+);
+```
 
 ## Tests
 
-Unit testing middleware is not easy. One tends to do functional tests and fire requests against a server. So we tested our middleware modules isolated. For that we have used:
-
-- [node-tap][tap], so each test is a running node application.
-- [node-mocks-http] to mock Request and Response, also the mocked Request object is no plain node request object, but more of an [express] one, already enriched with stuff we don't need or want.
-- [sinon] to spy on methods being called and with which parameters, etc.
-- [rewire] to even test or spy on otherwise private module methods
-
+We have unit tests run with [node-tap][tap]. To make middleware testing easier, we use [node-mocks-http] to mock Request and Response objects (mocked objects contain [express] like properties not needed for **lnsr**.
+Spying on callback execution is done with [sinon].
 
 ## Support
 
-- Any bugs about Markdown Preview please feel free to report [here][issue].
-- And you are welcome to fork and submit pull requests.
+Feel free to give feedback, ask for support, report [issues][issue] or to fork and submit pull requests.
 
 ## License
 
@@ -157,23 +241,19 @@ The code is available at [GitHub][home] under the [MIT license][license].
 [license]: https://github.com/matths/lnsr/blob/master/LICENSE
 [node.js]: https://nodejs.org
 [node.js github]: https://github.com/nodejs/node
-[node.js http]: https://nodejs.org/api/https.html
+[node.js http]: https://nodejs.org/api/http.html
 [node.js https]: https://nodejs.org/api/https.html
 [connect]: http://www.senchalabs.org/connect/proto.html
 [connect github]: https://github.com/senchalabs/connect
 [connect middleware]: https://stephensugden.com/middleware_guide/
 [express]: https://github.com/expressjs/express
 [express github]: https://expressjs.com
-[lodash]: https://lodash.com
-[lodash github]: https://github.com/lodash/lodash
 [tap]: http://www.node-tap.org
 [tap github]: https://github.com/tapjs/node-tap
 [sinon]: http://sinonjs.org
 [sinon github]: https://github.com/sinonjs/sinon
-[rewire]: https://github.com/jhnns/rewire
-[greenlock-express]: https://github.com/daplie/greenlock-express
+[node-mocks-http]: https://github.com/howardabrams/node-mocks-http
 [node-static]: https://github.com/cloudhead/node-static
 [body-parser]: https://github.com/expressjs/body-parser
 [path-to-regexp]: https://github.com/pillarjs/path-to-regexp
 [morgan]: https://github.com/expressjs/morgan
-[node-mocks-http]: https://github.com/howardabrams/node-mocks-http
