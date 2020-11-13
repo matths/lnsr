@@ -225,8 +225,7 @@ const requestHandler = lnsr.queue(
 
 ## Tests
 
-We have unit tests run with [node-tap][tap]. To make middleware testing easier, we use [node-mocks-http] to mock Request and Response objects (mocked objects contain [express] like properties not needed for **lnsr**.
-Spying on callback execution is done with [sinon].
+We have unit tests run with [node-tap][tap]. To make middleware testing easier, we use [node-mocks-http] to mock Request and Response objects (mocked objects contain [express] like properties not needed for **lnsr**. Spying on callback execution is done with [sinon]. And for code coverage we use [c8] because of `.mjs` files and ESM modules.
 
 ## Support
 
@@ -252,6 +251,7 @@ The code is available at [GitHub][home] under the [MIT license][license].
 [tap github]: https://github.com/tapjs/node-tap
 [sinon]: http://sinonjs.org
 [sinon github]: https://github.com/sinonjs/sinon
+[c8]: https://github.com/bcoe/c8
 [node-mocks-http]: https://github.com/howardabrams/node-mocks-http
 [node-static]: https://github.com/cloudhead/node-static
 [body-parser]: https://github.com/expressjs/body-parser
