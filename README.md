@@ -17,8 +17,8 @@ The framework by itself is actually no server and it doesn't create a server (no
 Install the module using you favorite package manager to you application package.
 
 ```bash
-$ npm install --save "github:matths/lnsr#develop"
-$ yarn add https://github.com/matths/lnsr#develop
+$ npm install --save lnsr
+$ yarn add lnsr
 ```
 
 ### Implement your server
