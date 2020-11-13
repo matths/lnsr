@@ -3,7 +3,8 @@
 **lnsr** – a <u>**l**</u>ea<u>**n**</u> <u>**s**</u>erve<u>**r**</u>
 
   [![npm version][npm-image]][npm-url]
-  [![tests action][action-image][action-url]
+  [![License: MIT][license-badge]][license]
+  [![tests workflow][workflow-image]][workflow-url]
 
 lnsr is a framework to create and completely understand your next nodejs server application.
 
@@ -238,11 +239,12 @@ The code is available at [GitHub][home] under the [MIT license][license].
 
 [npm-image]: https://img.shields.io/npm/v/lnsr.svg
 [npm-url]: https://npmjs.org/package/lnsr
-[action-image]: https://github.com/matths/lnsr/workflows/tests/badge.svg
-[action-url]: https://github.com/matths/lnsr/actions?query=workflow%3Atests
+[workflow-image]: https://github.com/matths/lnsr/workflows/tests/badge.svg
+[workflow-url]: https://github.com/matths/lnsr/actions?query=workflow%3Atests
 [home]: https://github.com/matths/lnsr
 [issue]: https://github.com/matths/lnsr/issues
 [license]: https://github.com/matths/lnsr/blob/master/LICENSE
+[license-badge]: https://img.shields.io/badge/License-MIT-yellow.svg
 [node.js]: https://nodejs.org
 [node.js github]: https://github.com/nodejs/node
 [node.js http]: https://nodejs.org/api/http.html
