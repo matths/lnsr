@@ -23,9 +23,9 @@ tap.test('compose', tap => {
       );
     const formatCentsAsEuroComposed = compose(addCurrency, addSeparators, dotToComma, roundTo2decimals, divideBy100);
 
-    tap.strictEqual(typeof formatCentsAsEuroComposed, 'function', 'compose should return a function');
-    tap.strictEqual(formatCentsAsEuroComposed(1234567890), '12.345.678,90 €', 'should return correct result');
-    tap.strictEqual(formatCentsAsEuroComposed(1234567890), formatCentsAsEuro(1234567890), 'should return same result as called one by one');
+    tap.equal(typeof formatCentsAsEuroComposed, 'function', 'compose should return a function');
+    tap.equal(formatCentsAsEuroComposed(1234567890), '12.345.678,90 €', 'should return correct result');
+    tap.equal(formatCentsAsEuroComposed(1234567890), formatCentsAsEuro(1234567890), 'should return same result as called one by one');
     tap.end();
   });
   tap.end();

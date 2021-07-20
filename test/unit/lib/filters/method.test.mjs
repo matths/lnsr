@@ -7,11 +7,11 @@ tap.test('method filter module',  tap => {
   tap.test('when created', tap => {
     tap.plan(5);
 
-    tap.false(method(), 'should return false when created without method');
-    tap.false(method('UGLIFY'), 'should return false when created without valid method');
-    tap.strictEqual(typeof method('GET'), 'function', 'should return a function when created with valid one valid method');
-    tap.strictEqual(typeof method(['GET', 'POST']), 'function', 'should return a function when created with an array of valid methods');
-    tap.strictEqual(typeof method(['GET', 'UGLIFY']), 'function','should return a function when created without a single valid method');
+    tap.notOk(method(), 'should return false when created without method');
+    tap.notOk(method('UGLIFY'), 'should return false when created without valid method');
+    tap.equal(typeof method('GET'), 'function', 'should return a function when created with valid one valid method');
+    tap.equal(typeof method(['GET', 'POST']), 'function', 'should return a function when created with an array of valid methods');
+    tap.equal(typeof method(['GET', 'UGLIFY']), 'function','should return a function when created without a single valid method');
 
     tap.end();
   });
@@ -24,9 +24,9 @@ tap.test('method filter module',  tap => {
       url: '/',
     });
   
-    tap.true(method('GET')(req), 'should match single uppercase method');
-    tap.true(method('Get')(req), 'should match single mixed case method');
-    tap.true(method(['GET', 'POST'])(req), 'should match a method from list');
+    tap.ok(method('GET')(req), 'should match single uppercase method');
+    tap.ok(method('Get')(req), 'should match single mixed case method');
+    tap.ok(method(['GET', 'POST'])(req), 'should match a method from list');
 
     tap.end();
   });

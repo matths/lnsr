@@ -4,8 +4,8 @@ import identity from '../../../../lib/utils/identity.mjs';
 tap.test('identity', tap => {
   tap.test('when using identity', tap => {
     tap.plan(2);
-    tap.strictEqual(identity(42), 42, 'should return given numeric value');
-    tap.strictEqual(identity('abc'), 'abc', 'should return given string');
+    tap.equal(identity(42), 42, 'should return given numeric value');
+    tap.equal(identity('abc'), 'abc', 'should return given string');
     tap.end();
   });
   tap.end();

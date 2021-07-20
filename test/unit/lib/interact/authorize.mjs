@@ -11,7 +11,7 @@ tap.test('authoriztion middleware module', tap => {
     const middlewareSpy = sinon.spy((req, res, next) => {
       next();
     });
-    tap.strictEqual(typeof authorize({}, middlewareSpy), 'function', 'should return a middleware function');
+    tap.equal(typeof authorize({}, middlewareSpy), 'function', 'should return a middleware function');
     tap.end();
   });
 
@@ -26,7 +26,7 @@ tap.test('authoriztion middleware module', tap => {
       eventEmitter: EventEmitter
     });
     res.on('finish', () => {
-      tap.strictEqual(res.statusCode, 401, 'returns 401');
+      tap.equal(res.statusCode, 401, 'returns 401');
     });
 
     const nextSpy = sinon.fake();
@@ -35,8 +35,8 @@ tap.test('authoriztion middleware module', tap => {
     });
 
     authorize({users: { agent007: 'top-secret' }, realm: 'Keep out area!'}, middlewareSpy)(req, res, nextSpy);
-    tap.strictEqual(middlewareSpy.callCount, 0, 'should not call middleware');
-    tap.strictEqual(nextSpy.callCount, 0, 'should not call next');
+    tap.equal(middlewareSpy.callCount, 0, 'should not call middleware');
+    tap.equal(nextSpy.callCount, 0, 'should not call next');
     tap.end();
   });
 
@@ -54,7 +54,7 @@ tap.test('authoriztion middleware module', tap => {
       eventEmitter: EventEmitter
     });
     res.on('finish', () => {
-      tap.strictEqual(res.statusCode, 401, 'returns 401');
+      tap.equal(res.statusCode, 401, 'returns 401');
     });
 
     const nextSpy = sinon.fake();
@@ -63,8 +63,8 @@ tap.test('authoriztion middleware module', tap => {
     });
 
     authorize({users: { agent007: 'top-secret' }, realm: 'Keep out area!'}, middlewareSpy)(req, res, nextSpy);
-    tap.strictEqual(middlewareSpy.callCount, 0, 'should not call middleware');
-    tap.strictEqual(nextSpy.callCount, 0, 'should not call next');
+    tap.equal(middlewareSpy.callCount, 0, 'should not call middleware');
+    tap.equal(nextSpy.callCount, 0, 'should not call next');
     tap.end();
   });
 
@@ -88,8 +88,8 @@ tap.test('authoriztion middleware module', tap => {
     });
 
     authorize({users: { agent007: 'top-secret' }, realm: 'Keep out area!'}, middlewareSpy)(req, res, nextSpy);
-    tap.true(middlewareSpy.calledOnce, 'should call middleware once');
-    tap.true(nextSpy.calledOnce, 'should call next');
+    tap.ok(middlewareSpy.calledOnce, 'should call middleware once');
+    tap.ok(nextSpy.calledOnce, 'should call next');
     tap.end();
   });
 

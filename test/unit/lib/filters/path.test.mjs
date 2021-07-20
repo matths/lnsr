@@ -6,8 +6,8 @@ tap.test('path filter module', tap => {
   
   tap.test('when created', tap => {
     tap.plan(2);
-    tap.false(path(), 'should return false when no path pattern is specified');
-    tap.strictEqual(typeof path('/user/:userid/action/:action'), 'function', 'should return a function');
+    tap.notOk(path(), 'should return false when no path pattern is specified');
+    tap.equal(typeof path('/user/:userid/action/:action'), 'function', 'should return a function');
     tap.end();
   });
 
@@ -16,17 +16,17 @@ tap.test('path filter module', tap => {
 
     let req;
     req = httpMocks.createRequest({ method: 'GET', params: {}, url: '/'});
-    tap.false(path('/user/:userid/action/:action')(req), 'should not match pattern with empty request uri');
+    tap.notOk(path('/user/:userid/action/:action')(req), 'should not match pattern with empty request uri');
 
     req = httpMocks.createRequest({ method: 'GET', params: {}, url: '/user/1'});
-    tap.false(path('/user/:userid/action/:action')(req), 'should not match pattern with more segments in pattern than in request uri');
+    tap.notOk(path('/user/:userid/action/:action')(req), 'should not match pattern with more segments in pattern than in request uri');
 
     req = httpMocks.createRequest({ method: 'GET', params: {}, url: '/user/1/action/create'});
-    tap.true(path('/user/:userid/action/:action')(req), 'should match pattern with equal segments count and keys');
+    tap.ok(path('/user/:userid/action/:action')(req), 'should match pattern with equal segments count and keys');
     tap.same(req.params, {userid: '1', action: 'create'}, 'should have correct req.params sideeffect');
 
     req = httpMocks.createRequest({ method: 'GET', params: {}, url: '/user/1/library/books'});
-    tap.false(path('/user/:userid/action/:action')(req), 'should not match pattern with equal segments count but wrong keys');
+    tap.notOk(path('/user/:userid/action/:action')(req), 'should not match pattern with equal segments count but wrong keys');
     tap.same(req.params, {}, 'should have correct req.params sideeffect');
 
     tap.end();

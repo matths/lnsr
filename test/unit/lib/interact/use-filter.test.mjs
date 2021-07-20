@@ -2,12 +2,12 @@ import { EventEmitter } from 'events';
 import tap from 'tap';
 import sinon from 'sinon';
 import httpMocks from 'node-mocks-http';
-import userFilter from '../../../../lib/interact/use-filter';
+import userFilter from '../../../../lib/interact/use-filter.mjs';
 
 tap.test('request filter middleware module', tap => {
   let req, res, returnTrue, returnFalse;
   
-  tap.beforeEach(done => {
+  tap.beforeEach(() => {
     req = httpMocks.createRequest({
       method: 'GET',
       url: '/user/Bob',
@@ -17,7 +17,6 @@ tap.test('request filter middleware module', tap => {
     });
     returnTrue = () => true;
     returnFalse = () => false;
-    done();
   });
 
   tap.test('when created', tap => {
@@ -27,7 +26,7 @@ tap.test('request filter middleware module', tap => {
       next();
     };
 
-    tap.strictEqual(typeof userFilter(returnTrue, middleware), 'function', 'should return a middleware function');
+    tap.equal(typeof userFilter(returnTrue, middleware), 'function', 'should return a middleware function');
     tap.end();
   });
 
@@ -40,7 +39,7 @@ tap.test('request filter middleware module', tap => {
     });
 
     userFilter(false, middlewareSpy)(req, res, nextSpy);
-    tap.strictEqual(middlewareSpy.callCount, 0, 'should not call middleware');
+    tap.equal(middlewareSpy.callCount, 0, 'should not call middleware');
     tap.ok(nextSpy.calledOnce, 'should call next function');
     tap.end();
   });
@@ -57,7 +56,7 @@ tap.test('request filter middleware module', tap => {
     userFilter(returnTrue, middlewareSpy)(req, res, nextSpy);
     tap.ok(middlewareSpy.calledOnce, 'should call middleware once');
     tap.ok(middlewareSpy.calledWith(req, res), 'should call middleware with req and res');
-    tap.strictEqual(typeof middlewareSpy.lastCall.lastArg, 'function', 'should call middleware with a next function');
+    tap.equal(typeof middlewareSpy.lastCall.lastArg, 'function', 'should call middleware with a next function');
     tap.ok(nextSpy.calledOnce, 'should call next function once after the middleware');
     tap.end();
   });
@@ -87,7 +86,7 @@ tap.test('request filter middleware module', tap => {
     userFilter([returnTrue, returnTrue], middlewareSpy)(req, res, nextSpy);
     tap.ok(middlewareSpy.calledOnce, 'should call middleware once');
     tap.ok(middlewareSpy.calledWith(req, res), 'should call middleware with req and res');
-    tap.strictEqual(typeof middlewareSpy.lastCall.lastArg, 'function', 'should call middleware with a next function');
+    tap.equal(typeof middlewareSpy.lastCall.lastArg, 'function', 'should call middleware with a next function');
     tap.ok(nextSpy.calledOnce, 'should call next function once after the middleware');
     tap.end();
   });
@@ -106,10 +105,9 @@ tap.test('request filter middleware module', tap => {
     tap.end();
   });
 
-  tap.afterEach(done => {
+  tap.afterEach(() => {
     req = null;
     res = null;
-    done();
   });
 
   tap.end();

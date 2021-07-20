@@ -2,12 +2,12 @@ import tap from 'tap';
 import sinon from 'sinon';
 import httpMocks from 'node-mocks-http';
 import { EventEmitter } from 'events';
-import queue from '../../../lib/queue';
+import queue from '../../../lib/queue.mjs';
 
 tap.test('queue middleware module', tap => {
   let req, res;
   
-  tap.beforeEach(done => {
+  tap.beforeEach(() => {
     req = httpMocks.createRequest({
       method: 'GET',
       url: '/',
@@ -18,15 +18,14 @@ tap.test('queue middleware module', tap => {
       eventEmitter: EventEmitter
     });
 
-    done();
   });
 
   tap.test('when created', tap => {
     tap.plan(2);
     const queueMiddleware = queue();
 
-    tap.strictEqual(typeof queueMiddleware, 'function', 'should return a middleware function');
-    tap.strictEqual(queueMiddleware.length, 3, 'that excepts three arguments by default');
+    tap.equal(typeof queueMiddleware, 'function', 'should return a middleware function');
+    tap.equal(queueMiddleware.length, 3, 'that excepts three arguments by default');
     tap.end();
   });
 
@@ -41,7 +40,7 @@ tap.test('queue middleware module', tap => {
     tap.ok(middlewareSpy.calledOnce, 'should call middleware once');
     tap.ok(middlewareSpy.calledWith(req, res), 'should call middleware with req and res');
     tap.ok(nextSpy.calledOnce, 'should call inital next middleware');
-    tap.strictEqual(typeof middlewareSpy.lastCall.lastArg, 'function', 'should call middleware with a next function');
+    tap.equal(typeof middlewareSpy.lastCall.lastArg, 'function', 'should call middleware with a next function');
     tap.end();
   });
 
@@ -127,10 +126,9 @@ tap.test('queue middleware module', tap => {
     tap.end();
   });
 
-  tap.afterEach(done => {
+  tap.afterEach(() => {
     req = null;
     res = null;
-    done();
   });
 
   tap.end();

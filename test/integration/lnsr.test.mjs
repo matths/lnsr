@@ -2,12 +2,12 @@ import EventEmitter from 'events';
 import tap from 'tap';
 import sinon from 'sinon';
 import httpMocks from 'node-mocks-http';
-import {get, post, path} from '../../lib/lnsr';
+import {get, post, path} from '../../lib/lnsr.mjs';
 
 tap.test('lnsr library', tap => {
   let req, res, middlewareSpy, nextSpy;
   
-  tap.beforeEach(done => {
+  tap.beforeEach(() => {
     req = httpMocks.createRequest({
       method: 'GET',
       url: '/',
@@ -23,16 +23,14 @@ tap.test('lnsr library', tap => {
     });
 
     nextSpy = sinon.spy(() => {});
-
-    done();
   });
 
   tap.test('when using get shortcut', tap => {
     tap.plan(2);
     const mw = get('/user/:username', middlewareSpy);
     mw(req, res, nextSpy);
-    tap.strictEqual(typeof mw, 'function', 'should return a middleware function');
-    tap.strictEqual(middlewareSpy.callCount, 0, 'should not call middleware');
+    tap.equal(typeof mw, 'function', 'should return a middleware function');
+    tap.equal(middlewareSpy.callCount, 0, 'should not call middleware');
     tap.end();
   });
 
@@ -40,8 +38,8 @@ tap.test('lnsr library', tap => {
     tap.plan(2);
     const mw = post('/user/:username', middlewareSpy);
     mw(req, res, nextSpy);
-    tap.strictEqual(typeof mw, 'function', 'should return a middleware function');
-    tap.strictEqual(middlewareSpy.callCount, 0, 'should not call middleware');
+    tap.equal(typeof mw, 'function', 'should return a middleware function');
+    tap.equal(middlewareSpy.callCount, 0, 'should not call middleware');
     tap.end();
   });
 
@@ -54,15 +52,14 @@ tap.test('lnsr library', tap => {
 
     const mw = path('/user/:username', middlewareSpy);
     mw(req, res, nextSpy);
-    tap.strictEqual(typeof mw, 'function', 'should return a middleware function');
-    tap.true(middlewareSpy.calledOnce, 'should call middleware');
+    tap.equal(typeof mw, 'function', 'should return a middleware function');
+    tap.ok(middlewareSpy.calledOnce, 'should call middleware');
     tap.end();
   });
 
-  tap.afterEach(done => {
+  tap.afterEach(() => {
     req = null;
     res = null;
-    done();
   });
 
   tap.end();

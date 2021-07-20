@@ -2,12 +2,12 @@ import { EventEmitter } from 'events';
 import tap from 'tap';
 import sinon from 'sinon';
 import httpMocks from 'node-mocks-http';
-import error from '../../../lib/error';
+import error from '../../../lib/error.mjs';
 
 tap.test('error middleware module', tap => {
   let req, res;
   
-  tap.beforeEach(done => {
+  tap.beforeEach(() => {
     req = httpMocks.createRequest({
       method: 'GET',
       url: '/',
@@ -18,15 +18,14 @@ tap.test('error middleware module', tap => {
       eventEmitter: EventEmitter
     });
 
-    done();
   });
 
   tap.test('when created', tap => {
     tap.plan(2);
     const errorMiddleware = error();
 
-    tap.strictEqual(typeof errorMiddleware, 'function', 'should return a middleware function');
-    tap.strictEqual(errorMiddleware.length, 3, 'that excepts three arguments by default');
+    tap.equal(typeof errorMiddleware, 'function', 'should return a middleware function');
+    tap.equal(errorMiddleware.length, 3, 'that excepts three arguments by default');
     tap.end();
   });
 
@@ -39,7 +38,7 @@ tap.test('error middleware module', tap => {
     errorMiddleware(req, res, nextSpy);
 
     tap.ok(nextSpy.calledOnce, 'should call next');
-    tap.strictEqual(customError, req.error, 'should have set req.error');
+    tap.equal(customError, req.error, 'should have set req.error');
     tap.end();
   });
 
@@ -55,10 +54,9 @@ tap.test('error middleware module', tap => {
     tap.end();
   });
 
-  tap.afterEach(done => {
+  tap.afterEach(() => {
     req = null;
     res = null;
-    done();
   });
 
   tap.end();

@@ -7,8 +7,8 @@ tap.test('partialApply', tap => {
     const add = (a, b) => a + b;
     const sum = (...args) => args.reduce(add, 0);
     const add40 = partialApply(sum, [5, 15, 20]);
-    tap.strictEqual(typeof add40, 'function', 'should return a function');
-    tap.strictEqual(add40(10), 50, 'function should return same value as initial function');
+    tap.equal(typeof add40, 'function', 'should return a function');
+    tap.equal(add40(10), 50, 'function should return same value as initial function');
     tap.end();
   });
   tap.end();

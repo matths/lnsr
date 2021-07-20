@@ -8,9 +8,9 @@ tap.test('partial', tap => {
     const sum = (...args) => args.reduce(add, 0);
     const add1 = partial(add, 1);
     const add10 = partial(sum, 4, 6);
-    tap.strictEqual(typeof add1, 'function', 'should return a function');
-    tap.strictEqual(add1(2), sum(1, 2), 'function should return same value as initial function');
-    tap.strictEqual(add10(2), 12, 'function should return same value as initial function');
+    tap.equal(typeof add1, 'function', 'should return a function');
+    tap.equal(add1(2), sum(1, 2), 'function should return same value as initial function');
+    tap.equal(add10(2), 12, 'function should return same value as initial function');
     tap.end();
   });
   tap.end();

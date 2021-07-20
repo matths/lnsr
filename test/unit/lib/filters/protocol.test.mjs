@@ -7,8 +7,8 @@ tap.test('protocol filter module', tap => {
   tap.test('when created', tap => {
     tap.plan(2);
 
-    tap.false(protocol(), 'should return false when no protocol is specified');
-    tap.strictEqual(typeof protocol('http'), 'function', 'should return a function');
+    tap.notOk(protocol(), 'should return false when no protocol is specified');
+    tap.equal(typeof protocol('http'), 'function', 'should return a function');
 
     tap.end();
   });
@@ -24,8 +24,8 @@ tap.test('protocol filter module', tap => {
       }
     });
 
-    tap.true(protocol('https')(req), 'should match protocol');
-    tap.false(protocol('http')(req), 'should not match protocol');
+    tap.ok(protocol('https')(req), 'should match protocol');
+    tap.notOk(protocol('http')(req), 'should not match protocol');
 
     tap.end();
   });
@@ -38,8 +38,8 @@ tap.test('protocol filter module', tap => {
       url: '/'
     });
 
-    tap.false(protocol('https')(req), 'should not match protocol');
-    tap.true(protocol('http')(req), 'should match protocol');
+    tap.notOk(protocol('https')(req), 'should not match protocol');
+    tap.ok(protocol('http')(req), 'should match protocol');
 
     tap.end();
   });
